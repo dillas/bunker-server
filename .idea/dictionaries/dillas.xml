@@ -1,7 +1,9 @@
 <component name="ProjectDictionaryState">
   <dictionary name="dillas">
     <words>
+      <w>axios</w>
       <w>bcrypt</w>
+      <w>pubsub</w>
       <w>sequelize</w>
     </words>
   </dictionary>
