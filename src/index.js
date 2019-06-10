@@ -1,51 +1,133 @@
-import http from 'http';
-import express from 'express';
-import {
-    ApolloServer,
-    gql
-} from 'apollo-server-express';
+import "dotenv/config";
+import http from "http";
+import cors from "cors";
+import morgan from "morgan";
+import express from "express";
+import jwt from "jsonwebtoken";
+import DataLoader from "dataloader";
+import { ApolloServer, AuthenticationError } from "apollo-server-express";
 
-// const http = require('http');
-// const express = require('express');
-// const { ApolloServer, gql } = require('apollo-server-express');
-
-// import schema from './schema';
-// import resolvers from './resolvers';
+import resolvers from "./resolvers";
+import schema from "./schema";
+import models, { sequelize } from "./models";
+import loaders from "./loaders";
 
 const app = express();
-const typeDefs = gql`
-  type Book {
-    title: String
-    author: String
-  }
 
-  type Query {
-    books: [Book]
-  }
-`;
+app.use(cors());
 
-const resolvers = {
-    Query: {
-        books: () => books,
-    },
+app.use(morgan("dev"));
+
+const getMe = async req => {
+  const token = req.headers["x-token"];
+
+  if (token) {
+    try {
+      return await jwt.verify(token, process.env.SECRET);
+    } catch (e) {
+      throw new AuthenticationError("Your session expired. Sign in again.");
+    }
+  }
 };
 
 const server = new ApolloServer({
-    introspection: true,
-    playground: true,
-    typeDefs,
-    resolvers
+  introspection: true,
+  playground: true,
+  typeDefs: schema,
+  resolvers,
+  formatError: error => {
+    // remove the internal sequelize error message
+    // leave only the important validation error
+    const message = error.message
+      .replace("SequelizeValidationError: ", "")
+      .replace("Validation error: ", "");
+
+    return {
+      ...error,
+      message
+    };
+  },
+  context: async ({ req, connection }) => {
+    if (connection) {
+      return {
+        models,
+        loaders: {
+          user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
+        }
+      };
+    }
+
+    if (req) {
+      const me = await getMe(req);
+
+      return {
+        models,
+        me,
+        secret: process.env.SECRET,
+        loaders: {
+          user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
+        }
+      };
+    }
+  }
 });
 
-server.applyMiddleware({app, path: '/graphql'});
+server.applyMiddleware({ app, path: "/graphql" });
 
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
+const isTest = !!process.env.TEST_DATABASE;
+const isProduction = !!process.env.DATABASE_URL;
 const port = process.env.PORT || 8000;
 
-httpServer.listen({port}, () => {
+sequelize.sync({ force: isTest || isProduction }).then(async () => {
+  if (isTest || isProduction) {
+    createUsersWithMessages(new Date());
+  }
+
+  httpServer.listen({ port }, () => {
     console.log(`Apollo Server on http://localhost:${port}/graphql`);
+  });
 });
 
+const createUsersWithMessages = async date => {
+  await models.User.create(
+    {
+      username: "dillas",
+      email: "hello@robin.com",
+      password: "huikt0uznaet",
+      role: "ADMIN",
+      messages: [
+        {
+          text: "Published the Road to learn React",
+          createdAt: date.setSeconds(date.getSeconds() + 1)
+        }
+      ]
+    },
+    {
+      include: [models.Message]
+    }
+  );
 
+  await models.User.create(
+    {
+      username: "jonohn",
+      email: "hello@david.com",
+      password: "349761",
+      messages: [
+        {
+          text: "Happy to release ...",
+          createdAt: date.setSeconds(date.getSeconds() + 1)
+        },
+        {
+          text: "Published a complete ...",
+          createdAt: date.setSeconds(date.getSeconds() + 1)
+        }
+      ]
+    },
+    {
+      include: [models.Message]
+    }
+  );
+};
