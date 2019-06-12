@@ -1,5 +1,5 @@
 import { expect } from "chai";
-
+import { describe } from "mocha";
 import * as userApi from "./api";
 
 describe("users", () => {
@@ -9,7 +9,7 @@ describe("users", () => {
         data: {
           user: {
             id: "1",
-            username: "rwieruch",
+            username: "dillas",
             email: "hello@robin.com",
             role: "ADMIN"
           }
@@ -41,13 +41,13 @@ describe("users", () => {
           users: [
             {
               id: "1",
-              username: "rwieruch",
+              username: "dillas",
               email: "hello@robin.com",
               role: "ADMIN"
             },
             {
               id: "2",
-              username: "ddavids",
+              username: "jonohn",
               email: "hello@david.com",
               role: null
             }
@@ -79,7 +79,7 @@ describe("users", () => {
         data: {
           me: {
             id: "1",
-            username: "rwieruch",
+            username: "dillas",
             email: "hello@robin.com"
           }
         }
@@ -92,8 +92,8 @@ describe("users", () => {
           }
         }
       } = await userApi.signIn({
-        login: "rwieruch",
-        password: "rwieruch"
+        login: "dillas",
+        password: "huikt0uznaet"
       });
 
       const { data } = await userApi.me(token);
@@ -149,8 +149,8 @@ describe("users", () => {
           }
         }
       } = await userApi.signIn({
-        login: "rwieruch",
-        password: "rwieruch"
+        login: "dillas",
+        password: "huikt0uznaet"
       });
 
       const {
@@ -172,8 +172,8 @@ describe("users", () => {
           }
         }
       } = await userApi.signIn({
-        login: "ddavids",
-        password: "ddavids"
+        login: "jonohn",
+        password: "349761"
       });
 
       const {
@@ -203,8 +203,8 @@ describe("users", () => {
           }
         }
       } = await userApi.signIn({
-        login: "ddavids",
-        password: "ddavids"
+        login: "jonohn",
+        password: "349761"
       });
 
       expect(token).to.be.a("string");
@@ -219,7 +219,7 @@ describe("users", () => {
         }
       } = await userApi.signIn({
         login: "hello@david.com",
-        password: "ddavids"
+        password: "349761"
       });
 
       expect(token).to.be.a("string");
@@ -229,7 +229,7 @@ describe("users", () => {
       const {
         data: { errors }
       } = await userApi.signIn({
-        login: "ddavids",
+        login: "jonohn",
         password: "dontknow"
       });
 
@@ -242,7 +242,7 @@ describe("users", () => {
       data: { errors }
     } = await userApi.signIn({
       login: "dontknow",
-      password: "ddavids"
+      password: "349761"
     });
 
     expect(errors[0].message).to.eql(
