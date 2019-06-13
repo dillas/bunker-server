@@ -40,7 +40,7 @@ export default {
         password
       });
 
-      return { token: createToken(user, secret, "30m") };
+      return { token: createToken(user, secret, "90m") };
     },
 
     signIn: async (parent, { login, password }, { models, secret }) => {
@@ -80,6 +80,13 @@ export default {
   User: {
     messages: async (user, args, { models }) => {
       return await models.Message.findAll({
+        where: {
+          userId: user.id
+        }
+      });
+    },
+    posts: async (user, args, { models }) => {
+      return await models.Post.findAll({
         where: {
           userId: user.id
         }

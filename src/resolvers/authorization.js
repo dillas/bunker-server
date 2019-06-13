@@ -19,3 +19,13 @@ export const isMessageOwner = async (parent, { id }, { models, me }) => {
 
   return skip;
 };
+
+export const isPostOwner = async (parent, { id }, { models, me }) => {
+  const post = await models.Post.findByPk(id, { raw: true });
+
+  if (post.userId !== me.id) {
+    throw new ForbiddenError("Not authenticated as owner.");
+  }
+
+  return skip;
+};

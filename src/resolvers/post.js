@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 import { combineResolvers } from "graphql-resolvers";
 
 import pubsub, { EVENTS } from "../subscription";
-import { isAuthenticated, isMessageOwner } from "./authorization";
+import { isAuthenticated, isPostOwner } from "./authorization";
 
 const toCursorHash = string => Buffer.from(string).toString("base64");
 
@@ -11,7 +11,7 @@ const fromCursorHash = string =>
 
 export default {
   Query: {
-    messages: async (parent, { cursor, limit = 2 }, { models }) => {
+    posts: async (parent, { cursor, limit = 2 }, { models }) => {
       const cursorOptions = cursor
         ? {
             where: {
@@ -22,15 +22,16 @@ export default {
           }
         : {};
 
-      const messages = await models.Message.findAll({
+      const posts = await models.Post.findAll({
         order: [["createdAt", "DESC"]],
         limit: limit + 1,
         ...cursorOptions
       });
-      const hasNextPage = messages.length > limit;
 
-      const edges = hasNextPage ? messages.slice(0, -1) : messages;
+      const hasNextPage = posts.length > limit;
 
+      const edges = hasNextPage ? posts.slice(0, -1) : posts;
+      console.log(posts);
       return {
         edges,
         pageInfo: {
@@ -39,46 +40,46 @@ export default {
         }
       };
     },
-    message: async (parent, { id }, { models }) => {
-      return await models.Message.findByPk(id);
+    post: async (parent, { id }, { models }) => {
+      return await models.Post.findByPk(id);
     }
   },
 
   Mutation: {
-    createMessage: combineResolvers(
+    createPost: combineResolvers(
       isAuthenticated,
       async (parent, { text }, { models, me }) => {
-        const message = await models.Message.create({
+        const post = await models.Post.create({
           text,
           userId: me.id
         });
 
-        pubsub.publish(EVENTS.MESSAGE.MESSAGE_CREATED, {
-          messageCreated: { message }
+        pubsub.publish(EVENTS.POST.POST_CREATED, {
+          postCreated: { post }
         });
 
-        return message;
+        return post;
       }
     ),
 
-    deleteMessage: combineResolvers(
+    deletePost: combineResolvers(
       isAuthenticated,
-      isMessageOwner,
+      isPostOwner,
       async (parent, { id }, { models }) => {
-        return await models.Message.destroy({ where: { id } });
+        return await models.Post.destroy({ where: { id } });
       }
     )
   },
 
-  Message: {
-    user: async (message, args, { loaders }) => {
-      return await loaders.user.load(message.userId);
+  Post: {
+    user: async (post, args, { loaders }) => {
+      return await loaders.user.load(post.userId);
     }
   },
 
   Subscription: {
-    messageCreated: {
-      subscribe: () => pubsub.asyncIterator(EVENTS.MESSAGE.MESSAGE_CREATED)
+    postCreated: {
+      subscribe: () => pubsub.asyncIterator(EVENTS.POST.POST_CREATED)
     }
   }
 };

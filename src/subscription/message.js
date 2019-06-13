@@ -1,1 +1,1 @@
-export const CREATED = "CREATED";
+export const MESSAGE_CREATED = "CREATED";

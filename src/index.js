@@ -91,6 +91,10 @@ sequelize.sync({ force: isTest || isProduction }).then(async () => {
   });
 });
 
+function setDate(date) {
+  date.setSeconds(date.getSeconds() + 1);
+}
+
 const createUsersWithMessages = async date => {
   await models.User.create(
     {
@@ -98,15 +102,37 @@ const createUsersWithMessages = async date => {
       email: "hello@robin.com",
       password: "huikt0uznaet",
       role: "ADMIN",
+      posts: [
+        {
+          text: '!!!!POST 1 "dillas" Published the Road to learn React',
+          createdAt: setDate(date)
+        },
+        {
+          text: '!!!!POST 2 "dillas" Published the Road to learn React',
+          createdAt: setDate(date)
+        },
+        {
+          text: '!!!!POST 3 "dillas" Published the Road to learn React',
+          createdAt: setDate(date)
+        },
+        {
+          text: '!!!!POST 4 "dillas" Published the Road to learn React',
+          createdAt: setDate(date)
+        },
+        {
+          text: '!!!!POST 5 "dillas" Published the Road to learn React',
+          createdAt: setDate(date)
+        }
+      ],
       messages: [
         {
           text: "Published the Road to learn React",
-          createdAt: date.setSeconds(date.getSeconds() + 1)
+          createdAt: setDate(date)
         }
       ]
     },
     {
-      include: [models.Message]
+      include: [models.Message, models.Post]
     }
   );
 
@@ -115,19 +141,33 @@ const createUsersWithMessages = async date => {
       username: "jonohn",
       email: "hello@david.com",
       password: "349761",
+      posts: [
+        {
+          text: '!!!!POST "jonohn" Published the Road to learn React',
+          createdAt: setDate(date)
+        },
+        {
+          text: '!!!!POST "jonohn" Published the Road to learn React',
+          createdAt: setDate(date)
+        },
+        {
+          text: '!!!!POST "jonohn" Published the Road to learn React',
+          createdAt: setDate(date)
+        }
+      ],
       messages: [
         {
           text: "Happy to release ...",
-          createdAt: date.setSeconds(date.getSeconds() + 1)
+          createdAt: setDate(date)
         },
         {
           text: "Published a complete ...",
-          createdAt: date.setSeconds(date.getSeconds() + 1)
+          createdAt: setDate(date)
         }
       ]
     },
     {
-      include: [models.Message]
+      include: [models.Message, models.Post]
     }
   );
 };
