@@ -11,6 +11,10 @@ export default gql`
     deletePost(id: ID!): Boolean!
   }
 
+  #  type LanType {
+  #    ru: String!
+  #    en: String!
+  #  }
   type PostConnection {
     edges: [Post!]!
     pageInfo: PageInfo!
@@ -18,7 +22,7 @@ export default gql`
 
   type Post {
     id: ID!
-    text: String!
+    text: String
     createdAt: Date!
     user: User!
   }

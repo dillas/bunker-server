@@ -11,7 +11,28 @@ const fromCursorHash = string =>
 
 export default {
   Query: {
-    posts: async (parent, { cursor, limit = 2 }, { models }) => {
+    posts: async (parent, { cursor, limit = 2 }, { models, local }) => {
+      const posts = await models.Post.findAll({
+        attributes: ["id", ['"text"->"ru"', "text"], "createdAt"]
+        // attr: [
+        //   '"Office"."id" as "Office.id"',
+        //   '"OfficeLocations"."id" AS "OfficeLocation.id"'
+        // ],
+      });
+      console.log(posts);
+
+      const hasNextPage = posts.length > limit;
+      const edges = hasNextPage ? posts.slice(0, -1) : posts;
+      return {
+        edges,
+        pageInfo: {
+          hasNextPage,
+          endCursor: toCursorHash(edges[edges.length - 1].createdAt.toString())
+        }
+      };
+    },
+
+    /*posts: async (parent, { cursor, limit = 2 }, { models, local }) => {
       const cursorOptions = cursor
         ? {
             where: {
@@ -39,7 +60,7 @@ export default {
           endCursor: toCursorHash(edges[edges.length - 1].createdAt.toString())
         }
       };
-    },
+    },*/
     post: async (parent, { id }, { models }) => {
       return await models.Post.findByPk(id);
     }

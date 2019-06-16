@@ -51,6 +51,7 @@ const server = new ApolloServer({
     if (connection) {
       return {
         models,
+        local: "ru",
         loaders: {
           user: new DataLoader(keys => loaders.user.batchUsers(keys, models))
         }
@@ -62,6 +63,7 @@ const server = new ApolloServer({
 
       return {
         models,
+        local: "ru",
         me,
         secret: process.env.SECRET,
         loaders: {
@@ -104,30 +106,45 @@ const createUsersWithMessages = async date => {
       role: "ADMIN",
       posts: [
         {
-          text: '!!!!POST 1 "dillas" Published the Road to learn React',
+          text: {
+            ru: '!!!!POST 1 РУССКИЙ "dillas" Published the Road to learn React',
+            en: '!!!!POST 1 "dillas" Published the Road to learn React'
+          },
           createdAt: setDate(date)
         },
         {
-          text: '!!!!POST 2 "dillas" Published the Road to learn React',
+          text: {
+            ru: '!!!!POST 2 РУССКИЙ "dillas" Published the Road to learn React',
+            en: '!!!!POST 2 "dillas" Published the Road to learn React'
+          },
           createdAt: setDate(date)
         },
         {
-          text: '!!!!POST 3 "dillas" Published the Road to learn React',
+          text: {
+            ru: '!!!!POST 3 РУССКИЙ "dillas" Published the Road to learn React',
+            en: '!!!!POST 3 "dillas" Published the Road to learn React'
+          },
           createdAt: setDate(date)
         },
         {
-          text: '!!!!POST 4 "dillas" Published the Road to learn React',
+          text: {
+            ru: '!!!!POST 4 РУССКИЙ "dillas" Published the Road to learn React',
+            en: '!!!!POST 4 "dillas" Published the Road to learn React'
+          },
           createdAt: setDate(date)
         },
         {
-          text: '!!!!POST 5 "dillas" Published the Road to learn React',
+          text: {
+            ru: '!!!!POST 5 РУССКИЙ "dillas" Published the Road to learn React',
+            en: '!!!!POST 5 "dillas" Published the Road to learn React'
+          },
           createdAt: setDate(date)
         }
       ],
       messages: [
         {
           text: "Published the Road to learn React",
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         }
       ]
     },
@@ -143,26 +160,35 @@ const createUsersWithMessages = async date => {
       password: "349761",
       posts: [
         {
-          text: '!!!!POST "jonohn" Published the Road to learn React',
+          text: {
+            ru: '!!!!POST 1 РУССКИЙ "jonohn" Published the Road to learn React',
+            en: '!!!!POST 1 "jonohn" Published the Road to learn React'
+          },
           createdAt: setDate(date)
         },
         {
-          text: '!!!!POST "jonohn" Published the Road to learn React',
+          text: {
+            ru: '!!!!POST 2 РУССКИЙ "jonohn" Published the Road to learn React',
+            en: '!!!!POST 2 "jonohn" Published the Road to learn React'
+          },
           createdAt: setDate(date)
         },
         {
-          text: '!!!!POST "jonohn" Published the Road to learn React',
+          text: {
+            ru: '!!!!POST 3 РУССКИЙ "jonohn" Published the Road to learn React',
+            en: '!!!!POST 3 "jonohn" Published the Road to learn React'
+          },
           createdAt: setDate(date)
         }
       ],
       messages: [
         {
           text: "Happy to release ...",
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         },
         {
           text: "Published a complete ...",
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         }
       ]
     },

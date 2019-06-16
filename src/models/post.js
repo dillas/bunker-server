@@ -1,7 +1,9 @@
+const Sequelize = require("sequelize");
+
 const post = (sequelize, DataTypes) => {
   const Post = sequelize.define("post", {
     text: {
-      type: DataTypes.STRING,
+      type: Sequelize.JSONB,
       validate: { notEmpty: true }
     }
   });
