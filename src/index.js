@@ -93,10 +93,6 @@ sequelize.sync({ force: isTest || isProduction }).then(async () => {
   });
 });
 
-function setDate(date) {
-  date.setSeconds(date.getSeconds() + 1);
-}
-
 const createUsersWithMessages = async date => {
   await models.User.create(
     {
@@ -107,43 +103,43 @@ const createUsersWithMessages = async date => {
       posts: [
         {
           text: {
-            ru: '!!!!POST 1 РУССКИЙ "dillas" Published the Road to learn React',
-            en: '!!!!POST 1 "dillas" Published the Road to learn React'
+            ru: "Новость №1",
+            en: "News №1"
           },
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         },
         {
           text: {
-            ru: '!!!!POST 2 РУССКИЙ "dillas" Published the Road to learn React',
-            en: '!!!!POST 2 "dillas" Published the Road to learn React'
+            ru: "Новость №2",
+            en: "News №2"
           },
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         },
         {
           text: {
-            ru: '!!!!POST 3 РУССКИЙ "dillas" Published the Road to learn React',
-            en: '!!!!POST 3 "dillas" Published the Road to learn React'
+            ru: "Новость №3",
+            en: "News №3"
           },
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         },
         {
           text: {
-            ru: '!!!!POST 4 РУССКИЙ "dillas" Published the Road to learn React',
-            en: '!!!!POST 4 "dillas" Published the Road to learn React'
+            ru: "Новость №4",
+            en: "News №4"
           },
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         },
         {
           text: {
-            ru: '!!!!POST 5 РУССКИЙ "dillas" Published the Road to learn React',
-            en: '!!!!POST 5 "dillas" Published the Road to learn React'
+            ru: "Новость №5",
+            en: "News №5"
           },
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         }
       ],
       messages: [
         {
-          text: "Published the Road to learn React",
+          text: "Сообщение №1",
           createdAt: date.setSeconds(date.getSeconds() + 1)
         }
       ]
@@ -161,33 +157,33 @@ const createUsersWithMessages = async date => {
       posts: [
         {
           text: {
-            ru: '!!!!POST 1 РУССКИЙ "jonohn" Published the Road to learn React',
-            en: '!!!!POST 1 "jonohn" Published the Road to learn React'
+            ru: "Новость №6",
+            en: "News №6"
           },
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         },
         {
           text: {
-            ru: '!!!!POST 2 РУССКИЙ "jonohn" Published the Road to learn React',
-            en: '!!!!POST 2 "jonohn" Published the Road to learn React'
+            ru: "Новость №7",
+            en: "News №7"
           },
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         },
         {
           text: {
-            ru: '!!!!POST 3 РУССКИЙ "jonohn" Published the Road to learn React',
-            en: '!!!!POST 3 "jonohn" Published the Road to learn React'
+            ru: "Новость №8",
+            en: "News №8"
           },
-          createdAt: setDate(date)
+          createdAt: date.setSeconds(date.getSeconds() + 1)
         }
       ],
       messages: [
         {
-          text: "Happy to release ...",
+          text: "Сообщение №2",
           createdAt: date.setSeconds(date.getSeconds() + 1)
         },
         {
-          text: "Published a complete ...",
+          text: "Сообщение №3",
           createdAt: date.setSeconds(date.getSeconds() + 1)
         }
       ]
