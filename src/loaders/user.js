@@ -1,8 +1,10 @@
+import * as Sequelize from "sequelize";
+
 export const batchUsers = async (keys, models) => {
   const users = await models.User.findAll({
     where: {
       id: {
-        $in: keys
+        [Sequelize.Op.in]: keys
       }
     }
   });
